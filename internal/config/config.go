@@ -13,6 +13,15 @@ type Config struct {
 		Type string `yaml:"type"`
 		Port string `yaml:"port"`
 	} `yaml:"listen"`
+	Storage Storage `yaml:"storage"`
+}
+
+type Storage struct {
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+	DbName   string `yaml:"db_name"`
+	Password string `yaml:"password"`
+	Username string `yaml:"username"`
 }
 
 var instance *Config
