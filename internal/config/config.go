@@ -13,7 +13,8 @@ type Config struct {
 		Type string `yaml:"type"`
 		Port string `yaml:"port"`
 	} `yaml:"listen"`
-	Storage Storage `yaml:"storage"`
+	Storage Storage   `yaml:"storage"`
+	JWT     JWTConfig `yaml:"jwt"`
 }
 
 type Storage struct {
@@ -22,6 +23,11 @@ type Storage struct {
 	DbName   string `yaml:"db_name"`
 	Password string `yaml:"password"`
 	Username string `yaml:"username"`
+}
+
+type JWTConfig struct {
+	Secret     string `yaml:"secret"`
+	Expiration int    `yaml:"expiration"`
 }
 
 var instance *Config

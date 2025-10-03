@@ -10,3 +10,6 @@ storage:
   port: 5432
   password: 2025
   db_name: postgres
+jwt:
+  secret: jwt_secret_key
+  expiration: 24

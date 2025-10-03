@@ -26,7 +26,7 @@ func (h *userHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	if req.Name == "" || req.Password == "" || req.Email == "" {
+	if req.Name == "" || req.Password == "" || req.Email == "" || req.PhoneNumber == "" {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Name, password and email are required",
 		})
@@ -53,5 +53,29 @@ func (h *userHandler) GetAllUsers(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, users)
+
+}
+
+func (h *userHandler) Login(c *gin.Context) {
+	var loginReq dto.LoginReq
+	if err := c.ShouldBindJSON(&loginReq); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if loginReq.Username == "" || loginReq.Password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Username and password are required",
+		})
+		return
+	}
+
+	loginResp, err := h.service.Login(c.Request.Context(), &loginReq)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, loginResp)
 
 }

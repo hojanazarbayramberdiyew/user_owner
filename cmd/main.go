@@ -6,6 +6,7 @@ import (
 	"log"
 	"user_owner/internal/config"
 	"user_owner/internal/handler"
+	"user_owner/internal/middleware"
 	"user_owner/internal/repository"
 	"user_owner/internal/service"
 
@@ -20,7 +21,7 @@ func main() {
 	cfg := config.GetConfig()
 
 	userRepo := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepo)
+	userService := service.NewUserService(userRepo, cfg)
 	userHandler := handler.NewUserHandler(userService)
 
 	r := gin.Default()
@@ -29,6 +30,17 @@ func main() {
 	{
 		api.POST("/users", userHandler.CreateUser)
 		api.GET("/users", userHandler.GetAllUsers)
+		api.POST("/login", userHandler.Login)
+	}
+
+	orderRepo := repository.NewOrderRepository(db)
+	orderService := service.NewOrderService(orderRepo)
+	orderHandler := handler.NewOrderHandler(orderService)
+
+	protected := r.Group("/api/v1/protected")
+	protected.Use(middleware.AuthMiddleware(cfg, userRepo))
+	{
+		protected.POST("/orders", orderHandler.CreateOrder)
 	}
 
 	port := fmt.Sprintf(":%s", cfg.Listen.Port)
