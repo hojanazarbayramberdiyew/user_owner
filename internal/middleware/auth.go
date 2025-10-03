@@ -95,7 +95,7 @@ func AuthMiddleware(cfg *config.Config, userRepo repository.UserRepository) gin.
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{
 				"error":   "Unauthorized",
-				"message": "Invalid user phone in token",
+				"message": "Invalid user phone number in token",
 			})
 			c.Abort()
 			return
