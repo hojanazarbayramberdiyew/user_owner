@@ -3,9 +3,10 @@ package repository
 import (
 	"context"
 	"fmt"
+	"math/rand"
+	"time"
 	"user_owner/internal/model"
 
-	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -22,7 +23,15 @@ func NewOrderRepository(db *pgxpool.Pool) OrderRepository {
 }
 
 func generateOrderCode() string {
-	return uuid.New().String()[:5]
+	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	const codeLength = 5
+
+	rand.New(rand.NewSource(time.Now().Unix()))
+	code := make([]byte, codeLength)
+	for i := range code {
+		code[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(code)
 }
 
 func (r *orderRepository) CreateOrder(ctx context.Context, order *model.Order) error {
