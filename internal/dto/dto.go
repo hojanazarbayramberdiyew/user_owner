@@ -7,20 +7,20 @@ import (
 )
 
 type CreateUserReq struct {
-	ID          uuid.UUID `json:"id,omitempty"`
+	ID          uuid.UUID `json:"id,omitempty" swaggerignore:"true"`
 	Name        string    `json:"name" binding:"required"`
 	Password    string    `json:"password" binding:"required"`
 	PhoneNumber string    `json:"phone_number" binding:"required"`
 	Email       string    `json:"email" binding:"required"`
 	Logo        string    `json:"logo"`
-	CreatedAt   time.Time `json:"created_at,omitempty"`
-	UpdatedAt   time.Time `json:"updated_at,omitempty"`
+	CreatedAt   time.Time `json:"created_at,omitempty" swaggerignore:"true"`
+	UpdatedAt   time.Time `json:"updated_at,omitempty" swaggerignore:"true"`
 }
 
 type CreateUserResponse struct {
-	ID        uuid.UUID `json:"id"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        uuid.UUID `json:"id" example:"123e4567-e89b-12d3-a456-426614174000"`
+	CreatedAt time.Time `json:"created_at" example:"2023-01-01T00:00:00Z"`
+	UpdatedAt time.Time `json:"updated_at" example:"2023-01-01T00:00:00Z"`
 }
 
 type LoginReq struct {

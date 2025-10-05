@@ -3,10 +3,12 @@ package handler
 import (
 	"context"
 	"net/http"
+	"time"
 	"user_owner/internal/dto"
 	"user_owner/internal/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type userHandler struct {
@@ -36,6 +38,10 @@ func (h *userHandler) CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body: " + err.Error()})
 		return
 	}
+
+	req.ID = uuid.Nil
+	req.CreatedAt = time.Time{}
+	req.UpdatedAt = time.Time{}
 
 	if req.Name == "" || req.Password == "" || req.Email == "" || req.PhoneNumber == "" {
 		c.JSON(http.StatusBadRequest, gin.H{

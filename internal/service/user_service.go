@@ -9,6 +9,7 @@ import (
 	"user_owner/internal/repository"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 type UserService interface {
@@ -29,6 +30,9 @@ func (s *userService) GetUsers(ctx context.Context) ([]model.User, error) {
 
 // CreateUser implements UserService.
 func (s *userService) CreateUser(ctx context.Context, user *dto.CreateUserReq) error {
+	user.ID = uuid.Nil
+	user.CreatedAt = time.Time{}
+	user.UpdatedAt = time.Time{}
 	return s.repo.CreateUser(ctx, user)
 }
 

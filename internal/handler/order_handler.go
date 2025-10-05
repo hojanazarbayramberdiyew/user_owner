@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"user_owner/internal/dto"
 	"user_owner/internal/service"
@@ -66,4 +67,28 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 		"message": "Order created successfully",
 		"data":    order,
 	})
+}
+
+// GetAllOrders gets all orders
+// @Summary Get all orders
+// @Description Retrieve all orders from the database
+// @Tags orders
+// @Accept json
+// @Produce json
+// @Security BearerAuth
+// @Param Authorization header string true "Bearer token"
+// @Success 200 {array} map[string]interface{} "List of orders"
+// @Failure 500 {object} map[string]interface{} "Failed to get orders"
+// @Router /protected/orders [get]
+func (h *OrderHandler) GetAllOrders(c *gin.Context) {
+
+	ctx := context.Background()
+	orders, err := h.orderService.GetAllOrders(ctx)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get all orders: " + err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, orders)
+
 }

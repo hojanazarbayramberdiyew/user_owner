@@ -15,6 +15,7 @@ import (
 type OrderService interface {
 	CreateOrder(ctx context.Context, userID uuid.UUID, userPhone string, req *dto.CreateOrderRequest) (*model.Order, error)
 	GenerateQRCodeFromCode(orderCode string) (string, error)
+	GetAllOrders(ctx context.Context) ([]model.Order, error)
 }
 
 type orderService struct {
@@ -60,4 +61,8 @@ func (s *orderService) GenerateQRCodeFromCode(orderCode string) (string, error) 
 
 	return filename, nil
 
+}
+
+func (s *orderService) GetAllOrders(ctx context.Context) ([]model.Order, error) {
+	return s.orderRepo.GetAllOrders(ctx)
 }

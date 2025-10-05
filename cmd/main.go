@@ -15,9 +15,10 @@ import (
 	"user_owner/internal/repository"
 	"user_owner/internal/service"
 
+	_ "user_owner/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
-	_ "user_owner/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -51,6 +52,7 @@ func main() {
 	protected.Use(middleware.AuthMiddleware(cfg, userRepo))
 	{
 		protected.POST("/orders", orderHandler.CreateOrder)
+		protected.GET("/orders", orderHandler.GetAllOrders)
 	}
 
 	port := fmt.Sprintf(":%s", cfg.Listen.Port)

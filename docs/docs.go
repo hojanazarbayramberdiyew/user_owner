@@ -72,6 +72,52 @@ const docTemplate = `{
             }
         },
         "/protected/orders": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve all orders from the database",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Get all orders",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of orders",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "additionalProperties": true
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get orders",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
             "post": {
                 "security": [
                     {
@@ -251,13 +297,7 @@ const docTemplate = `{
                 "phone_number"
             ],
             "properties": {
-                "created_at": {
-                    "type": "string"
-                },
                 "email": {
-                    "type": "string"
-                },
-                "id": {
                     "type": "string"
                 },
                 "logo": {
@@ -270,9 +310,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "phone_number": {
-                    "type": "string"
-                },
-                "updated_at": {
                     "type": "string"
                 }
             }

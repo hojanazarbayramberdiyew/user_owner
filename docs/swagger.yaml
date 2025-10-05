@@ -16,11 +16,7 @@ definitions:
     type: object
   user_owner_internal_dto.CreateUserReq:
     properties:
-      created_at:
-        type: string
       email:
-        type: string
-      id:
         type: string
       logo:
         type: string
@@ -29,8 +25,6 @@ definitions:
       password:
         type: string
       phone_number:
-        type: string
-      updated_at:
         type: string
     required:
     - email
@@ -94,6 +88,36 @@ paths:
       tags:
       - auth
   /protected/orders:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all orders from the database
+      parameters:
+      - description: Bearer token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of orders
+          schema:
+            items:
+              additionalProperties: true
+              type: object
+            type: array
+        "500":
+          description: Failed to get orders
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all orders
+      tags:
+      - orders
     post:
       consumes:
       - application/json
