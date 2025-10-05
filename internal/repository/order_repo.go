@@ -26,10 +26,10 @@ func generateOrderCode() string {
 	const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	const codeLength = 5
 
-	rand.New(rand.NewSource(time.Now().Unix()))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	code := make([]byte, codeLength)
 	for i := range code {
-		code[i] = charset[rand.Intn(len(charset))]
+		code[i] = charset[r.Intn(len(charset))]
 	}
 	return string(code)
 }

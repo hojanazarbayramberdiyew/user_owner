@@ -51,15 +51,6 @@ func (r *userRepository) Login(ctx context.Context, loginReq *dto.LoginReq) (*dt
 	return user, nil
 }
 
-// UpdateUserLogo implements UserRepository.
-func (r *userRepository) UpdateUserLogo(ctx context.Context, userID string, logoPath string) error {
-
-	query := "UPDATE users SET logo=$1, updated_at=NOW() WHERE id=$2"
-	_, err := r.db.Exec(ctx, query, userID, logoPath)
-	return err
-
-}
-
 // GetUsers implements UserRepository.
 func (r *userRepository) GetUsers(ctx context.Context) ([]model.User, error) {
 
@@ -131,34 +122,6 @@ func (r *userRepository) FindByUsername(ctx context.Context, username string) (*
 
 	return &user, nil
 
-}
-
-func (r *userRepository) FindByEmail(ctx context.Context, email string) (*dto.UserResponse, error) {
-	var user dto.UserResponse
-	query := "SELECT id,name,password,phone_number,email,logo,created_at,updated_at FROM users WHERE email=$1"
-
-	err := r.db.QueryRow(ctx, query, email).Scan(&user.ID, &user.Name, &user.Password, &user.PhoneNumber, &user.Email, &user.Logo, &user.CreatedAt, &user.UpdatedAt)
-
-	if err != nil {
-		if err == pgx.ErrNoRows {
-			return nil, fmt.Errorf("user not found by email: %s", email)
-		}
-		return nil, fmt.Errorf("user alyp bolmady: %v", err)
-	}
-
-	return &user, nil
-
-}
-
-func (r *userRepository) EmailExists(ctx context.Context, email string) (bool, error) {
-	var count int
-	query := "SELECT COUNT(*) FROM users WHERE email = $1"
-
-	err := r.db.QueryRow(ctx, query, email).Scan(&count)
-	if err != nil {
-		return false, fmt.Errorf("email barlap bolmady: %w", err)
-	}
-	return count > 0, nil
 }
 
 func (r *userRepository) UsernameExists(ctx context.Context, username string) (bool, error) {

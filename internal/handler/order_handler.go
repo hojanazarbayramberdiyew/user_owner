@@ -17,6 +17,20 @@ func NewOrderHandler(orderService service.OrderService) *OrderHandler {
 	return &OrderHandler{orderService: orderService}
 }
 
+// CreateOrder creates a new order
+// @Summary      Create a new order
+// @Description  Create a new order with user information and location details
+// @Tags         orders
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        Authorization header string true "Bearer token"
+// @Param        request body dto.CreateOrderRequest true "Order creation request"
+// @Success      201  {object}  map[string]interface{}  "Order created successfully"
+// @Failure      400  {object}  map[string]interface{}  "Invalid request"
+// @Failure      401  {object}  map[string]interface{}  "Unauthorized"
+// @Failure      500  {object}  map[string]interface{}  "Internal server error"
+// @Router       /protected/orders [post]
 func (h *OrderHandler) CreateOrder(c *gin.Context) {
 	userIDStr, exists := c.Get("userID")
 	if !exists {
