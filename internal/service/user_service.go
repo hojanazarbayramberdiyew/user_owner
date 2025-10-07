@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"mime/multipart"
 	"time"
 	"user_owner/internal/config"
 	"user_owner/internal/dto"
@@ -16,11 +17,13 @@ type UserService interface {
 	CreateUser(ctx context.Context, user *dto.CreateUserReq) error
 	GetUsers(ctx context.Context) ([]model.User, error)
 	Login(ctx context.Context, loginReq *dto.LoginReq) (*dto.LoginResponse, error)
+	UpdateUserLogo(ctx context.Context, userID uuid.UUID, fileHeader *multipart.FileHeader) error
 }
 
 type userService struct {
-	repo   repository.UserRepository
-	config *config.Config
+	repo        repository.UserRepository
+	config      *config.Config
+	fileService FileService
 }
 
 // GetUsers implements UserService.
@@ -36,8 +39,8 @@ func (s *userService) CreateUser(ctx context.Context, user *dto.CreateUserReq) e
 	return s.repo.CreateUser(ctx, user)
 }
 
-func NewUserService(repo repository.UserRepository, cfg *config.Config) UserService {
-	return &userService{repo: repo, config: cfg}
+func NewUserService(repo repository.UserRepository, cfg *config.Config, fileService FileService) UserService {
+	return &userService{repo: repo, config: cfg, fileService: fileService}
 }
 
 func (s *userService) Login(ctx context.Context, loginReq *dto.LoginReq) (*dto.LoginResponse, error) {
@@ -72,4 +75,20 @@ func (s *userService) generateJWT(user *dto.UserResponse) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(s.config.JWT.Secret))
+}
+
+func (s *userService) UpdateUserLogo(ctx context.Context, userID uuid.UUID, fileHeader *multipart.FileHeader) error {
+
+	logoPath, err := s.fileService.UploadUserLogo(ctx, userID, fileHeader)
+	if err != nil {
+		return err
+	}
+
+	err = s.repo.UpdateUserLogo(ctx, userID, logoPath)
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }

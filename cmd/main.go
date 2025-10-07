@@ -34,14 +34,19 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	userRepo := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepo, cfg)
+	fileService := service.NewFileService("./uploads")
+	userService := service.NewUserService(userRepo, cfg, fileService)
 	userHandler := handler.NewUserHandler(userService)
+
+	r.Static("/uploads", "./uploads")
 
 	api := r.Group("/api/v1")
 	{
 		api.POST("/users", userHandler.CreateUser)
 		api.GET("/users", userHandler.GetAllUsers)
 		api.POST("/login", userHandler.Login)
+
+		api.PUT("/users/:id/logo", userHandler.UpdateUserLogo)
 	}
 
 	orderRepo := repository.NewOrderRepository(db)

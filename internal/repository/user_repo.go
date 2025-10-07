@@ -6,6 +6,7 @@ import (
 	"user_owner/internal/dto"
 	"user_owner/internal/model"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"golang.org/x/crypto/bcrypt"
@@ -17,6 +18,7 @@ type UserRepository interface {
 	FindByUsername(ctx context.Context, username string) (*dto.UserResponse, error)
 	UsernameExists(ctx context.Context, username string) (bool, error)
 	Login(ctx context.Context, loginReq *dto.LoginReq) (*dto.UserResponse, error)
+	UpdateUserLogo(ctx context.Context, userID uuid.UUID, logoPath string) error
 }
 
 type userRepository struct {
@@ -133,4 +135,16 @@ func (r *userRepository) UsernameExists(ctx context.Context, username string) (b
 		return false, fmt.Errorf("username barlap bolmady: %w", err)
 	}
 	return count > 0, nil
+}
+
+func (r *userRepository) UpdateUserLogo(ctx context.Context, userID uuid.UUID, logoPath string) error {
+
+	query := "UPDATE users SET logo=$1,updated_at=Now() WHERE id=$2"
+
+	_, err := r.db.Exec(ctx, query, logoPath, userID)
+	if err != nil {
+		return fmt.Errorf("user logosy tazelenmedi: %v", err)
+	}
+	return nil
+
 }

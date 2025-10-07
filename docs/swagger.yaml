@@ -1,5 +1,8 @@
 basePath: /api/v1
 definitions:
+  gin.H:
+    additionalProperties: {}
+    type: object
   user_owner_internal_dto.CreateOrderRequest:
     properties:
       city:
@@ -216,6 +219,40 @@ paths:
             additionalProperties: true
             type: object
       summary: Create a new user
+      tags:
+      - users
+  /users/{id}/logo:
+    put:
+      consumes:
+      - multipart/form-data
+      description: User üçin täze logo faýly ýüklemek
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Logo faýly
+        in: formData
+        name: logo
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: User logosyny üýtgetmek
       tags:
       - users
 swagger: "2.0"

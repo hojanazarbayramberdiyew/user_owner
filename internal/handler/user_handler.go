@@ -117,3 +117,46 @@ func (h *userHandler) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, loginResp)
 
 }
+
+// UpdateUserLogo
+// @Summary User logosyny üýtgetmek
+// @Description User üçin täze logo faýly ýüklemek
+// @Tags users
+// @Accept multipart/form-data
+// @Produce json
+// @Param id path string true "User ID"
+// @Param logo formData file true "Logo faýly"
+// @Success 200 {object} gin.H
+// @Failure 400 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /users/{id}/logo [put]
+func (h *userHandler) UpdateUserLogo(c *gin.Context) {
+
+	userID := c.Param("id")
+
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "User ID gerek"})
+		return
+	}
+
+	uuid, err := uuid.Parse(userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Nadogry user ID"})
+		return
+	}
+
+	fileHeader, err := c.FormFile("logo")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Logo fayly alynmady"})
+		return
+	}
+
+	err = h.service.UpdateUserLogo(c.Request.Context(), uuid, fileHeader)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "User logosy ustunlikli uytgedildi"})
+
+}
