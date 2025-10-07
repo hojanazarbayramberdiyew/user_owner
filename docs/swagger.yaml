@@ -225,14 +225,14 @@ paths:
     put:
       consumes:
       - multipart/form-data
-      description: User üçin täze logo faýly ýüklemek
+      description: Upload New Logo for User
       parameters:
       - description: User ID
         in: path
         name: id
         required: true
         type: string
-      - description: Logo faýly
+      - description: Logo file
         in: formData
         name: logo
         required: true
@@ -252,7 +252,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: User logosyny üýtgetmek
+      summary: Update user logo
       tags:
       - users
 swagger: "2.0"

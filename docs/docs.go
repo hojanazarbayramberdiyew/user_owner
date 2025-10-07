@@ -268,7 +268,7 @@ const docTemplate = `{
         },
         "/users/{id}/logo": {
             "put": {
-                "description": "User üçin täze logo faýly ýüklemek",
+                "description": "Upload New Logo for User",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -278,7 +278,7 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "User logosyny üýtgetmek",
+                "summary": "Update user logo",
                 "parameters": [
                     {
                         "type": "string",
@@ -289,7 +289,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "file",
-                        "description": "Logo faýly",
+                        "description": "Logo file",
                         "name": "logo",
                         "in": "formData",
                         "required": true
