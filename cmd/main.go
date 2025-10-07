@@ -39,6 +39,7 @@ func main() {
 	userHandler := handler.NewUserHandler(userService)
 
 	r.Static("/uploads", "./uploads")
+	r.Static("/qrcodes", "./qrcodes")
 
 	api := r.Group("/api/v1")
 	{
